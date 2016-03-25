@@ -23,7 +23,7 @@ import org.apache.commons.math3.distribution.NormalDistribution;
  */
 public class NEURO {
 
-    static final int PERCENT = 10;
+    static final int PERCENT = 20;
 
     //COSX
 //    static final double TOP_Y = 1;
@@ -32,7 +32,7 @@ public class NEURO {
 //    static final double RIGHT_X = 3.14 * 4;
 //    static final double RANGE_X = 0.25;
 //    static final double MAX = 1.0;
-//    static final double RANDOM_COUNT = 20;
+//    static final double RANDOM_COUNT = 30;
 
 //    5x^3 + x^2 + 5
     static final double TOP_Y = 100;
@@ -50,7 +50,7 @@ public class NEURO {
 //    static final double RIGHT_X = 3.14;
 //    static final double RANGE_X = 0.1;
 //    static final double MAX = 3.14;
-//    static final double RANDOM_COUNT = 20;
+//    static final double RANDOM_COUNT = 30;
 
     private final UniformRealDistribution distribution = new UniformRealDistribution(LEFT_X, RIGHT_X);
     private final NormalDistribution normalDistribution = new NormalDistribution();
@@ -175,7 +175,7 @@ public class NEURO {
 
         for (int i = 0; i < yData.size(); i++) {
             if (new Random().nextInt(100) < PERCENT) {
-                yData.set(i, normalDistribution.sample());
+                yData.set(i, normalDistribution.sample()*30);
             }
         }
 
@@ -216,12 +216,12 @@ public class NEURO {
         Double[] inputVector = xDataError.toArray(new Double[xDataError.size()]);
         Double[] outputVector = yDataError.toArray(new Double[yDataError.size()]);
 
-        //cos = {1, 10, 1} = 200000  DEFINE
-        //sin = {1, 30, 1} = 200000  DEFINE
-        //pol = {1, 10, 1} = 200000  DEFINE
+        //cos = {1, 5, 1} = 250000  DEFINE
+        //sin = {1, 5, 1} = 200000  DEFINE
+        //pol = {1, 5, 1} = 250000  DEFINE
 
-        NeuralNetwork neuralNetwork = new NeuralNetwork(new int[]{1, 10, 1});
-        neuralNetwork.trainCount = 200000;
+        NeuralNetwork neuralNetwork = new NeuralNetwork(new int[]{1, 5, 1});
+        neuralNetwork.trainCount = 250000;
         neuralNetwork.trainNeuralNetwork(inputVector, outputVector);
 
         charts.add(neuro.chartForError(neuralNetwork.errors));
