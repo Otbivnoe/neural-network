@@ -25,38 +25,38 @@ public class NEURO {
 
     static final int PERCENT = 20;
 
-    //COSX
+//    COSX
 //    static final double TOP_Y = 1;
 //    static final double BOTTOM_Y = -1;
 //    static final double LEFT_X = 3.14;
 //    static final double RIGHT_X = 3.14 * 4;
 //    static final double RANGE_X = 0.25;
 //    static final double MAX = 1.0;
-//    static final double RANDOM_COUNT = 30;
+//    static final double RANDOM_COUNT = 50;
 
 //    5x^3 + x^2 + 5
-    static final double TOP_Y = 100;
-    static final double BOTTOM_Y = -100;
-    static final double LEFT_X = -7;
-    static final double RIGHT_X = 7;
-    static final double RANGE_X = 0.20;
-    static final double MAX = 2000;
-    static final double RANDOM_COUNT = 50;
+//    static final double TOP_Y = 60;
+//    static final double BOTTOM_Y = -60;
+//    static final double LEFT_X = -3;
+//    static final double RIGHT_X = 3;
+//    static final double RANGE_X = 0.20;
+//    static final double MAX = 2000;
+//    static final double RANDOM_COUNT = 30;
 
 //    sin
-//    static final double TOP_Y = 3.14;
-//    static final double BOTTOM_Y = -3.14;
-//    static final double LEFT_X = 0;
-//    static final double RIGHT_X = 3.14;
-//    static final double RANGE_X = 0.1;
-//    static final double MAX = 3.14;
-//    static final double RANDOM_COUNT = 30;
+    static final double TOP_Y = 3.14;
+    static final double BOTTOM_Y = -3.14;
+    static final double LEFT_X = 0;
+    static final double RIGHT_X = 3.14/2;
+    static final double RANGE_X = 0.1;
+    static final double MAX = 3.14;
+    static final double RANDOM_COUNT = 30;
 
     private final UniformRealDistribution distribution = new UniformRealDistribution(LEFT_X, RIGHT_X);
     private final NormalDistribution normalDistribution = new NormalDistribution();
 
-    private List<List<Double>> funcData = solvData();
-    private List<List<Double>> funcDataError = solvDataError();
+    private List<List<Double>> funcData = sinData();
+    private List<List<Double>> funcDataError = sinDataError();
 
     List<List<Double>> cosData() {
 
@@ -216,16 +216,29 @@ public class NEURO {
         Double[] inputVector = xDataError.toArray(new Double[xDataError.size()]);
         Double[] outputVector = yDataError.toArray(new Double[yDataError.size()]);
 
-        //cos = {1, 5, 1} = 250000  DEFINE
-        //sin = {1, 5, 1} = 200000  DEFINE
-        //pol = {1, 5, 1} = 250000  DEFINE
+        //cos = {1, 3, 1} = 250000  DEFINE
+        //sin = {1, 3, 1} = 200000  DEFINE
+        //pol = {1, 3, 1} = 250000  DEFINE
 
-        NeuralNetwork neuralNetwork = new NeuralNetwork(new int[]{1, 5, 1});
-        neuralNetwork.trainCount = 250000;
-        neuralNetwork.trainNeuralNetwork(inputVector, outputVector);
 
-        charts.add(neuro.chartForError(neuralNetwork.errors));
-        charts.add(neuro.chartForGraphic(neuralNetwork));
+        int goodNetworkIndex = 0;
+        Double error = Double.MAX_VALUE;
+
+        NeuralNetwork[] neuralNetworks = new NeuralNetwork[5];
+        for (int i = 0; i < neuralNetworks.length; i++) {
+            NeuralNetwork neuralNetwork = new NeuralNetwork(new int[]{1, 3, 1});
+            neuralNetwork.trainCount = 250000;
+            neuralNetwork.trainNeuralNetwork(inputVector, outputVector);
+            neuralNetworks[i] = neuralNetwork;
+
+            if (error > neuralNetworks[i].MAINERROR) {
+                error = neuralNetworks[i].MAINERROR;
+                goodNetworkIndex = i;
+            }
+        }
+
+        charts.add(neuro.chartForError(neuralNetworks[goodNetworkIndex].errors));
+        charts.add(neuro.chartForGraphic(neuralNetworks[goodNetworkIndex]));
 
         new SwingWrapper(charts).displayChartMatrix();
     }

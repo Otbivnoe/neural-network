@@ -20,6 +20,8 @@ public class NeuralNetwork {
     private IMetrics error = new HalfSquaredEuclidianDistance();
     private IActivateFunction activateFunction = new HyperbolicTangensFunction();
 
+    public double MAINERROR;
+
     public NeuralNetwork(int[] neuronCounts) {
 
         for (int i = 0; i < neuronCounts.length - 1; i++) {
@@ -46,7 +48,6 @@ public class NeuralNetwork {
 
         for (int i = 0; i < trainCount; i++) {
 
-//            System.out.println(i);
             Double [] errors_ = new Double[inputVector.length];
 
             for (int j = 0; j < inputVector.length; j++) {
@@ -64,6 +65,13 @@ public class NeuralNetwork {
             Double _error = error.Calculate(errors_, outputVector);
             this.errors.add(_error);
         }
+
+        Double[] neuroOutput = new Double[outputVector.length];
+        for (int i = 0; i < outputVector.length; i++) {
+            neuroOutput[i] = valueOutput(outputVector[i]);
+        }
+
+        this.MAINERROR = this.error.Calculate(neuroOutput, outputVector);
     }
 
     private Double outputForCurrentWeights() {
